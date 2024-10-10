@@ -1,0 +1,33 @@
+version : "3.8"
+services:
+  wordpress:
+    image: wordpress
+    ports:
+      - "8083:80"
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: "thebestpassword"
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      petnet:
+        ipv4_address: "10.56.1.2"
+  mysql:
+    image: "mysql:5.7"
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: "thebestpassword"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      petnet:
+        ipv4_address: "10.56.1.3"
+networks:
+  petnet:
+    ipam:
+      driver: default
+      config:
+        - subnet : "10.56.1.0/24"
+          gateway: "10.56.1.1"
